@@ -1,9 +1,15 @@
-chan comms = [0] of {}
+typedef eMessage{
+    mtype key;
+    mtype nonce;
+    mtype ID;
+};
 
-proctype Alice(){
+chan comms = [0] of { eMessage, mtype, int }
 
+active proctype Alice(){
+    eMessage new1;
 }
 
-proctype Bob(){
-
+active proctype Bob(){
+    eMessage new2;
 }
