@@ -101,4 +101,39 @@ active proctype Bob(){
 
 }
 
-ltl finishes {[]<> (AliceConfirmed && BobConfirmed)}
+active proctype Intruder(){
+    // setup
+    eMessage sentMsg;
+    eMessage recievedMsg;
+    mtype myNonce;
+    int msgNumber;
+    int recivedKey;
+    int i;
+    int j;
+    int k;
+    
+    // attempting to intercept
+
+    comms ? (recievedMsg, msgNumber, recivedKey);
+
+    // forwarding packet or creating a new packet and sending it
+
+    select(j: 0 .. 1); // randomly picking the recipient of the message
+    select(k: 0 .. 1); // randomly picking forward recived packet or make new packet
+
+    sentMsg.key = recievedMsg.key; // making a new packet 
+    sentMsg.misc1 = recievedMsg.misc1; 
+    sentMsg.misc1 = recievedMsg.misc1;
+
+    if
+        :: (k == 0) -> comms ! recievedMsg (msgNumber, j) // forwards the message marked for process j
+        :: (k == 1) -> comms ! sentMsg (msgNumber, j) // sends new packet to process j
+        :: else -> skip
+    fi;
+
+
+}
+
+ltl Finishes {[]<> (AliceConfirmed && BobConfirmed)}
+//ltl AliceFinishes {[]<> (AliceConfirmed)}
+//ltl BobFinishes {[]<> (BobConfirmed)}
